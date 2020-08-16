@@ -1,14 +1,11 @@
 package com.njProjectServer.model;
 
-import org.hibernate.Incubating;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table()
 public class Employee {
     @Id
     private int employeeId;
@@ -18,7 +15,8 @@ public class Employee {
 
     @OneToMany()
     @JoinColumn(name = "employeeId")
-    private List<UserProfile> prifiles;
+
+    private List<UserProfile> profiles;
 
     public int getEmployeeId() {
         return employeeId;
@@ -28,12 +26,12 @@ public class Employee {
         this.employeeId = employeeId;
     }
 
-    public List<UserProfile> getPrifiles() {
-        return prifiles;
+    public List<UserProfile> getProfiles() {
+        return profiles;
     }
 
-    public void setPrifiles(List<UserProfile> prifiles) {
-        this.prifiles = prifiles;
+    public void setProfiles(List<UserProfile> profiles) {
+        this.profiles = profiles;
     }
 
     public String getName() {

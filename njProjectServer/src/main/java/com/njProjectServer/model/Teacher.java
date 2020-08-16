@@ -3,6 +3,7 @@ package com.njProjectServer.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "teacher")
 @PrimaryKeyJoinColumn(name = "employeeId")
 public class Teacher extends Employee {
 
@@ -12,5 +13,7 @@ public class Teacher extends Employee {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "titleID", nullable = false)
     private Title title;
+    @Column()
+    private String nesto;
 
 }
