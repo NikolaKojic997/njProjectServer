@@ -5,7 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+        name = "type",
+        discriminatorType = DiscriminatorType.STRING
+)
+@DiscriminatorValue("E")
 public class Employee {
     @Id
     private int employeeId;
