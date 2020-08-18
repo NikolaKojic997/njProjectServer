@@ -1,5 +1,6 @@
 package com.njProjectServer.controller;
 
+import com.njProjectServer.model.Assistant;
 import com.njProjectServer.model.Employee;
 import com.njProjectServer.model.Teacher;
 import com.njProjectServer.service.EmployeeService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/employee")
@@ -27,5 +29,50 @@ public class EmployeeController {
         return teachers;
     }
 
+    @GetMapping("/assistants")
+    @ResponseBody
+    public List<Assistant> getAllAssistants(){
+        return service.getAllAssistants();
+    }
+
+    @GetMapping("/{id}")
+    public Optional<Employee> getOne(@PathVariable int id){
+        return  service.findById(id);
+    }
+
+    @PostMapping
+    public Employee insert(@RequestBody Employee employee){
+        return service.insert(employee);
+    }
+
+    @PostMapping("/teachers")
+    public Teacher insertTeacher(@RequestBody Teacher teacher){
+        return service.insertTeacher(teacher);
+    }
+
+    @PostMapping("/assistants")
+    public Assistant insertAssistant(@RequestBody Assistant assistant){
+        return service.insertAssistant(assistant);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id){
+        service.delete(id);
+    }
+
+    @PutMapping()
+    public Employee update(@RequestBody Employee employee){
+        return service.update(employee);
+    }
+
+    @PutMapping("/teachers")
+    public Teacher updateTeacher(@RequestBody Teacher teacher){
+        return service.updateTeacher(teacher);
+    }
+
+    @PutMapping("/assistants")
+    public Assistant update(@RequestBody Assistant assistant){
+        return service.updateAssistant(assistant);
+    }
 
 }

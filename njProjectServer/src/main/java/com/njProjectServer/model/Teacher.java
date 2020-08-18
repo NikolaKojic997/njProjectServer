@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "teacher")
 @PrimaryKeyJoinColumn(name = "employeeId")
 @DiscriminatorValue("T")
 public class Teacher extends Employee {
