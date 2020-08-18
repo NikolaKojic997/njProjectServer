@@ -1,5 +1,7 @@
 package com.njProjectServer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,6 +13,7 @@ public class UserProfile {
     private String email;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employeeId", nullable = false)
+    @JsonIgnoreProperties("profiles")
     private Employee employee;
 
     public int getUserId() {
