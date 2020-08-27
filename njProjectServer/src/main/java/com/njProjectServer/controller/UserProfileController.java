@@ -18,6 +18,7 @@ public class UserProfileController {
 
     @GetMapping
     public List<UserProfile> findAll(){
-        return profilesService.findAll();
+        List<UserProfile> profiles =  profilesService.findAll();
+        return profiles;
     }
 }

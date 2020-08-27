@@ -1,5 +1,6 @@
 package com.njProjectServer.service;
 
+import com.njProjectServer.exception.ResourceNotFoundException;
 import com.njProjectServer.model.Assistant;
 import com.njProjectServer.model.Employee;
 import com.njProjectServer.model.Teacher;
@@ -7,6 +8,8 @@ import com.njProjectServer.repository.AssistantRepository;
 import com.njProjectServer.repository.EmployeeRepository;
 import com.njProjectServer.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,7 +68,13 @@ public class EmployeeService {
         return teachersRepository.save(teacher);
     }
 
-    public Optional<Employee> findById(int id) {
-        return employeeRepository.findById(id);
+    public ResponseEntity<Employee> findById(int id) {
+        Optional<Employee> e =  employeeRepository.findById(id);
+
+        if (e.isEmpty()){
+            throw new ResourceNotFoundException("User with id: "+id+ " not found");
+        }
+
+        return new ResponseEntity(e, HttpStatus.OK);
     }
 }

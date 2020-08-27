@@ -1,10 +1,12 @@
 package com.njProjectServer.controller;
 
+import com.njProjectServer.exception.ResourceNotFoundException;
 import com.njProjectServer.model.Assistant;
 import com.njProjectServer.model.Employee;
 import com.njProjectServer.model.Teacher;
 import com.njProjectServer.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,8 +38,11 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Employee> getOne(@PathVariable int id){
+    public ResponseEntity<Employee> getOne(@PathVariable int id){
+
         return  service.findById(id);
+//                orElseThrow(() -> new ResourceNotFoundException("User not found with id: "+ id));
+
     }
 
     @PostMapping
