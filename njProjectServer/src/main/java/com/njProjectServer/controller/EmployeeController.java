@@ -38,7 +38,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getOne(@PathVariable int id){
+    public ResponseEntity<Object> getOne(@PathVariable int id){
 
         return  service.findById(id);
 //                orElseThrow(() -> new ResourceNotFoundException("User not found with id: "+ id));

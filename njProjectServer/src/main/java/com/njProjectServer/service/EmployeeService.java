@@ -68,7 +68,7 @@ public class EmployeeService {
         return teachersRepository.save(teacher);
     }
 
-    public ResponseEntity<Employee> findById(int id) {
+    public ResponseEntity<Object> findById(int id) {
         Optional<Employee> e =  employeeRepository.findById(id);
 
         if (e.isEmpty()){
