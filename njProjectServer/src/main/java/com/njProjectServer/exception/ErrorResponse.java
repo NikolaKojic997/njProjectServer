@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import javax.persistence.Entity;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -17,7 +18,15 @@ public class ErrorResponse {
     private LocalDateTime timestamp;
     private String message;
     private String debugMessage;
+    List<String> details;
 
+    public List<String> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<String> details) {
+        this.details = details;
+    }
 
     private ErrorResponse() {
         timestamp = LocalDateTime.now();
@@ -33,6 +42,13 @@ public class ErrorResponse {
         this.status = status;
         this.message = "Unexpected error";
         this.debugMessage = ex.getLocalizedMessage();
+    }
+
+    ErrorResponse(HttpStatus status, String message, List<String> details) {
+        this();
+        this.status = status;
+        this.message = message;
+        this.details = details;
     }
 
     ErrorResponse(HttpStatus status, String message, Throwable ex) {

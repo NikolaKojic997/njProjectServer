@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "employeeId")
@@ -22,6 +23,10 @@ public class Teacher extends Employee {
     private Title title;
     @JsonProperty("nesto")
     private String nesto;
+
+    public Teacher(String name, String surname, Date employmentDate) {
+        super(name, surname, employmentDate);
+    }
 
     @JsonGetter("rank")
     public Rank getRank() {

@@ -4,6 +4,7 @@ import com.njProjectServer.exception.ResourceNotFoundException;
 import com.njProjectServer.model.Assistant;
 import com.njProjectServer.model.Employee;
 import com.njProjectServer.model.Teacher;
+import com.njProjectServer.model.dto.InsertEmployeeDto;
 import com.njProjectServer.repository.AssistantRepository;
 import com.njProjectServer.repository.EmployeeRepository;
 import com.njProjectServer.repository.TeacherRepository;
@@ -39,8 +40,9 @@ public class EmployeeService {
         return  (List<Assistant>) assistantRepository.findAll();
     }
 
-    public Employee insert(Employee employee) {
-        return employeeRepository.save(employee);
+    public Employee insert(InsertEmployeeDto employee) {
+        Employee emp = new Employee(employee.getName(), employee.getSurname(), employee.getEmploymentDate());
+        return employeeRepository.save(emp);
     }
 
     public Teacher insertTeacher(Teacher teacher) {

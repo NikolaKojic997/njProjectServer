@@ -1,8 +1,12 @@
 package com.njProjectServer.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.context.annotation.Primary;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -14,11 +18,14 @@ import java.util.List;
         discriminatorType = DiscriminatorType.STRING
 )
 @DiscriminatorValue("E")
-public class Employee {
-    @Id
+public class Employee  {
+    @Id @GeneratedValue
     private int employeeId;
+//    @NotEmpty(message = "Name field cannot be empty!")
     private String name;
+//    @NotEmpty(message = "Surname field cannot be empty!")
     private String surname;
+//    @NotNull @Past
     private Date employmentDate;
 
     @OneToMany()
@@ -63,6 +70,12 @@ public class Employee {
     }
 
     public void setEmploymentDate(Date employmentDate) {
+        this.employmentDate = employmentDate;
+    }
+
+    public Employee(String name, String surname, Date employmentDate) {
+        this.name = name;
+        this.surname = surname;
         this.employmentDate = employmentDate;
     }
 }

@@ -4,11 +4,13 @@ import com.njProjectServer.exception.ResourceNotFoundException;
 import com.njProjectServer.model.Assistant;
 import com.njProjectServer.model.Employee;
 import com.njProjectServer.model.Teacher;
+import com.njProjectServer.model.dto.InsertEmployeeDto;
 import com.njProjectServer.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,12 +48,12 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public Employee insert(@RequestBody Employee employee){
+    public Employee insert(@Valid @RequestBody InsertEmployeeDto employee){
         return service.insert(employee);
     }
 
     @PostMapping("/teachers")
-    public Teacher insertTeacher(@RequestBody Teacher teacher){
+    public Teacher insertTeacher(@Valid @RequestBody Teacher teacher){
         return service.insertTeacher(teacher);
     }
 
