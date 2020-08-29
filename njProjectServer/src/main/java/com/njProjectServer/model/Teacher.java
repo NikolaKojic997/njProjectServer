@@ -22,8 +22,8 @@ public class Teacher extends Employee {
     @JsonProperty(value = "title")
     private Title title;
 
-    public Teacher(String name, String surname, Date employmentDate, Title t, Rank r) {
-        super(name, surname, employmentDate);
+    public Teacher(String name, String surname, Date employmentDate, Title t, Rank r, String identificationNumber) {
+        super(name, surname, employmentDate, identificationNumber);
         this.rank = r;
         this.title = t;
     }

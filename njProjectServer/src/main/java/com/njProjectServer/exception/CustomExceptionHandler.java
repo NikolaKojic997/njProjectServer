@@ -3,6 +3,7 @@ package com.njProjectServer.exception;
 import com.njProjectServer.model.dto.InsertEmployeeDto;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -48,7 +50,13 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST,"Validation Failed", details);
         return buildResponseEntity(error);
     }
-
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public final ResponseEntity<Object> handleSQLExceptions(Exception ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR,"SQL constraint exception", details);
+        return buildResponseEntity(error);
+    }
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {

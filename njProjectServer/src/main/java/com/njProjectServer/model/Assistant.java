@@ -11,8 +11,8 @@ public class Assistant extends Employee {
     @JoinColumn(name = "titleID")
     private Title title;
 
-    public Assistant(String name, String surname, Date employmentDate, Title t) {
-        super(name, surname, employmentDate);
+    public Assistant(String name, String surname, Date employmentDate, Title t, String identificationNumber) {
+        super(name, surname, employmentDate, identificationNumber);
         this.title = t;
     }
 

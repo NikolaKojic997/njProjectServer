@@ -1,8 +1,11 @@
 package com.njProjectServer.model.dto;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 public class InsertEmployeeDto {
@@ -14,6 +17,18 @@ public class InsertEmployeeDto {
     @NotNull (message = "Date cannot be null!")
     @Past (message = "Date must be in the past!")
     private Date employmentDate;
+
+    @Length(min = 13, max = 13, message = "Length of id must be 13!")
+    @Pattern(regexp = "^[0-9]*$", message = "invalid format of identification number")
+    private String identificationNumber;
+
+    public String getIdentificationNumber() {
+        return identificationNumber;
+    }
+
+    public void setIdentificationNumber(String identificationNumber) {
+        this.identificationNumber = identificationNumber;
+    }
 
     public String getName() {
         return name;

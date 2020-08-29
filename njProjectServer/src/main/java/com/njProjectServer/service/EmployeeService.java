@@ -45,7 +45,7 @@ public class EmployeeService {
     }
 
     public Employee insert(InsertEmployeeDto employee) {
-        Employee emp = new Employee(employee.getName(), employee.getSurname(), employee.getEmploymentDate());
+        Employee emp = new Employee(employee.getName(), employee.getSurname(), employee.getEmploymentDate(), employee.getIdentificationNumber());
         return employeeRepository.save(emp);
     }
 
@@ -60,7 +60,7 @@ public class EmployeeService {
         if(t.isEmpty())
             throw new ResourceNotFoundException("Title with given id not found!");
 
-        Teacher tech = new Teacher(teacher.getName(), teacher.getSurname(), teacher.getEmploymentDate(), t.get(), r.get());
+        Teacher tech = new Teacher(teacher.getName(), teacher.getSurname(), teacher.getEmploymentDate(), t.get(), r.get(), teacher.getIdentificationNumber());
         return teachersRepository.save(tech);
     }
 
@@ -70,7 +70,7 @@ public class EmployeeService {
         if(t.isEmpty())
             throw new ResourceNotFoundException("Title with given id not found!");
 
-        Assistant a = new Assistant(assistant.getName(), assistant.getSurname(), assistant.getEmploymentDate(), t.get());
+        Assistant a = new Assistant(assistant.getName(), assistant.getSurname(), assistant.getEmploymentDate(), t.get(), assistant.getIdentificationNumber());
 
         return assistantRepository.save(a);
     }
@@ -91,6 +91,7 @@ public class EmployeeService {
         emp.get().setEmploymentDate(employee.getEmploymentDate());
         emp.get().setName(employee.getName());
         emp.get().setSurname(employee.getSurname());
+        emp.get().setIdentificationNumber(employee.getIdentificationNumber());
 
         return employeeRepository.save(emp.get());
     }
@@ -103,6 +104,7 @@ public class EmployeeService {
         a.get().setEmploymentDate(assistant.getEmploymentDate());
         a.get().setName(assistant.getName());
         a.get().setSurname(assistant.getSurname());
+        a.get().setIdentificationNumber(assistant.getIdentificationNumber());
 
         Optional<Title> title = titleRepository.findById(assistant.getTitleID());
 
@@ -122,6 +124,7 @@ public class EmployeeService {
         t.get().setEmploymentDate(teacher.getEmploymentDate());
         t.get().setName(teacher.getName());
         t.get().setSurname(teacher.getSurname());
+        t.get().setIdentificationNumber(teacher.getIdentificationNumber());
 
         Optional<Title> title = titleRepository.findById(teacher.getTitleID());
 

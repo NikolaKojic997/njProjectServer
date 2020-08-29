@@ -22,6 +22,18 @@ public class Employee  {
     @Id @GeneratedValue
     private int employeeId;
 //    @NotEmpty(message = "Name field cannot be empty!")
+
+    public String getIdentificationNumber() {
+        return identificationNumber;
+    }
+
+    public void setIdentificationNumber(String identificationNumber) {
+        this.identificationNumber = identificationNumber;
+    }
+
+    @Column(unique=true)
+    private String identificationNumber;
+
     private String name;
 //    @NotEmpty(message = "Surname field cannot be empty!")
     private String surname;
@@ -73,10 +85,11 @@ public class Employee  {
         this.employmentDate = employmentDate;
     }
 
-    public Employee(String name, String surname, Date employmentDate) {
+    public Employee(String name, String surname, Date employmentDate, String identificationNumber) {
         this.name = name;
         this.surname = surname;
         this.employmentDate = employmentDate;
+        this.identificationNumber = identificationNumber;
     }
 
     public Employee() {
