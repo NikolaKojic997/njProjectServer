@@ -1,14 +1,18 @@
 package com.njProjectServer.service;
 
+import com.njProjectServer.exception.LoginException;
 import com.njProjectServer.exception.ResourceNotFoundException;
 import com.njProjectServer.model.Employee;
 import com.njProjectServer.model.UserProfile;
 import com.njProjectServer.model.dto.InsertProfileDto;
+import com.njProjectServer.model.dto.LoginUserDto;
 import com.njProjectServer.repository.EmployeeRepository;
 import com.njProjectServer.repository.ProfilesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.websocket.Session;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,4 +69,19 @@ public class ProfilesService {
         return profilesRepository.save(p.get());
 
     }
+
+    public UserProfile login(LoginUserDto user) {
+        Optional <UserProfile> profile =  profilesRepository.findByUsername(user.getUsername());
+        if (profile.isEmpty())
+            throw  new LoginException("Profile with given username doesent exist");
+
+        if(!profile.get().getPassword().equals(user.getPassword())){
+            throw new LoginException("Wrong password, try again!");
+        }
+
+        return  profile.get();
+
+    }
+
+
 }

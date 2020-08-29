@@ -1,6 +1,7 @@
 package com.njProjectServer.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 
@@ -8,6 +9,8 @@ import javax.persistence.*;
 public class UserProfile {
     @Id @GeneratedValue
     private int profileID;
+    @Column(unique = true)
+    @NaturalId
     private String username;
     private String password;
     private String email;
@@ -62,4 +65,10 @@ public class UserProfile {
         this.email = email;
         this.employee = employee;
     }
+
+    public UserProfile() {
+
+    }
+
+
 }

@@ -10,7 +10,7 @@ import javax.validation.constraints.Positive;
 
 public class InsertProfileDto {
     @NotEmpty(message = "Username cannot be empty")
-    @Column(unique = true)
+
     private String username;
     @NotEmpty(message = "Password cannot be empty")
     //Some pw regular expression
