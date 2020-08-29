@@ -6,8 +6,8 @@ import javax.persistence.*;
 
 @Entity
 public class UserProfile {
-    @Id
-    private int userId;
+    @Id @GeneratedValue
+    private int profileID;
     private String username;
     private String password;
     private String email;
@@ -16,12 +16,12 @@ public class UserProfile {
     @JsonIgnoreProperties("profiles")
     private Employee employee;
 
-    public int getUserId() {
-        return userId;
+    public int getProfileId() {
+        return profileID;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setProfileId(int userId) {
+        this.profileID = userId;
     }
 
     public String getUsername() {
@@ -53,6 +53,13 @@ public class UserProfile {
     }
 
     public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public UserProfile(String username, String password, String email, Employee employee) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
         this.employee = employee;
     }
 }
