@@ -78,4 +78,7 @@ public class Employee  {
         this.surname = surname;
         this.employmentDate = employmentDate;
     }
+
+    public Employee() {
+    }
 }

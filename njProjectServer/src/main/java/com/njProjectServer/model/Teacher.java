@@ -21,12 +21,14 @@ public class Teacher extends Employee {
     @JoinColumn(name = "titleID", nullable = false)
     @JsonProperty(value = "title")
     private Title title;
-    @JsonProperty("nesto")
-    private String nesto;
 
-    public Teacher(String name, String surname, Date employmentDate) {
+    public Teacher(String name, String surname, Date employmentDate, Title t, Rank r) {
         super(name, surname, employmentDate);
+        this.rank = r;
+        this.title = t;
     }
+
+
 
     @JsonGetter("rank")
     public Rank getRank() {
@@ -46,11 +48,6 @@ public class Teacher extends Employee {
         this.title = title;
     }
 
-    public String getNesto() {
-        return nesto;
-    }
-
-    public void setNesto(String nesto) {
-        this.nesto = nesto;
+    public Teacher() {
     }
 }

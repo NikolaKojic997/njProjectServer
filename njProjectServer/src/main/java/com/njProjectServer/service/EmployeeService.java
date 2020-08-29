@@ -1,13 +1,10 @@
 package com.njProjectServer.service;
 
 import com.njProjectServer.exception.ResourceNotFoundException;
-import com.njProjectServer.model.Assistant;
-import com.njProjectServer.model.Employee;
-import com.njProjectServer.model.Teacher;
+import com.njProjectServer.model.*;
 import com.njProjectServer.model.dto.InsertEmployeeDto;
-import com.njProjectServer.repository.AssistantRepository;
-import com.njProjectServer.repository.EmployeeRepository;
-import com.njProjectServer.repository.TeacherRepository;
+import com.njProjectServer.model.dto.InsertTeacherDto;
+import com.njProjectServer.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +25,12 @@ public class EmployeeService {
     @Autowired
     private AssistantRepository assistantRepository;
 
+    @Autowired
+    private RankRepository rankRepository;
+
+    @Autowired
+    private TitleRepository titleRepository;
+
     public List<Employee> getAll() {
         return (List<Employee>) employeeRepository.findAll();
     }
@@ -45,8 +48,19 @@ public class EmployeeService {
         return employeeRepository.save(emp);
     }
 
-    public Teacher insertTeacher(Teacher teacher) {
-        return teachersRepository.save(teacher);
+    public Teacher insertTeacher(InsertTeacherDto teacher) {
+        Optional<Rank> r = rankRepository.findById(teacher.getRankID());
+
+        if(r.isEmpty())
+            throw new ResourceNotFoundException("Rank with given id not found!");
+
+        Optional<Title> t = titleRepository.findById(teacher.getTitleID());
+
+        if(t.isEmpty())
+            throw new ResourceNotFoundException("Title with given id not found!");
+
+        Teacher tech = new Teacher(teacher.getName(), teacher.getSurname(), teacher.getEmploymentDate(), t.get(), r.get());
+        return teachersRepository.save(tech);
     }
 
     public Assistant insertAssistant(Assistant assistant) {
@@ -70,7 +84,7 @@ public class EmployeeService {
         return teachersRepository.save(teacher);
     }
 
-    public ResponseEntity<Object> findById(int id) {
+    public ResponseEntity<Employee> findById(int id) {
         Optional<Employee> e =  employeeRepository.findById(id);
 
         if (e.isEmpty()){

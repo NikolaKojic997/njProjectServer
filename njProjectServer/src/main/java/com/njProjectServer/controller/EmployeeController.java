@@ -5,6 +5,7 @@ import com.njProjectServer.model.Assistant;
 import com.njProjectServer.model.Employee;
 import com.njProjectServer.model.Teacher;
 import com.njProjectServer.model.dto.InsertEmployeeDto;
+import com.njProjectServer.model.dto.InsertTeacherDto;
 import com.njProjectServer.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,11 +41,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getOne(@PathVariable int id){
-
+    public ResponseEntity<Employee> getOne(@PathVariable int id){
         return  service.findById(id);
-//                orElseThrow(() -> new ResourceNotFoundException("User not found with id: "+ id));
-
     }
 
     @PostMapping
@@ -53,7 +51,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/teachers")
-    public Teacher insertTeacher(@Valid @RequestBody Teacher teacher){
+    public Teacher insertTeacher(@Valid @RequestBody InsertTeacherDto teacher){
         return service.insertTeacher(teacher);
     }
 
