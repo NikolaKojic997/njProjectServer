@@ -33,7 +33,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(
             ResourceNotFoundException ex) {
-        ErrorResponse apiError = new ErrorResponse(HttpStatus.NOT_FOUND, ex);
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse apiError = new ErrorResponse(HttpStatus.NOT_FOUND, "Resource not found", details );
         return buildResponseEntity(apiError);
     }
 

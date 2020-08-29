@@ -4,6 +4,7 @@ import com.njProjectServer.exception.ResourceNotFoundException;
 import com.njProjectServer.model.Assistant;
 import com.njProjectServer.model.Employee;
 import com.njProjectServer.model.Teacher;
+import com.njProjectServer.model.dto.InsertAssistantDto;
 import com.njProjectServer.model.dto.InsertEmployeeDto;
 import com.njProjectServer.model.dto.InsertTeacherDto;
 import com.njProjectServer.service.EmployeeService;
@@ -56,7 +57,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/assistants")
-    public Assistant insertAssistant(@RequestBody Assistant assistant){
+    public Assistant insertAssistant(@Valid @RequestBody InsertAssistantDto assistant){
         return service.insertAssistant(assistant);
     }
 
@@ -65,19 +66,19 @@ public class EmployeeController {
         service.delete(id);
     }
 
-    @PutMapping()
-    public Employee update(@RequestBody Employee employee){
-        return service.update(employee);
+    @PutMapping("/{id}")
+    public Employee update(@PathVariable int id ,@Valid @RequestBody InsertEmployeeDto employee){
+        return service.update(employee, id);
     }
 
-    @PutMapping("/teachers")
-    public Teacher updateTeacher(@RequestBody Teacher teacher){
-        return service.updateTeacher(teacher);
+    @PutMapping("/teachers/{id}")
+    public Teacher updateTeacher(@PathVariable int id,@Valid@RequestBody InsertTeacherDto teacher){
+        return service.updateTeacher(id,teacher);
     }
 
-    @PutMapping("/assistants")
-    public Assistant update(@RequestBody Assistant assistant){
-        return service.updateAssistant(assistant);
+    @PutMapping("/assistants/{id}")
+    public Assistant update(@PathVariable int id,@Valid@RequestBody InsertAssistantDto assistant){
+        return service.updateAssistant(id,assistant);
     }
 
 }
