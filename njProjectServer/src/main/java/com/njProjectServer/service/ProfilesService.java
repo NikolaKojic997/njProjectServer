@@ -1,5 +1,6 @@
 package com.njProjectServer.service;
 
+import com.njProjectServer.config.EmailConfiguration;
 import com.njProjectServer.exception.LoginException;
 import com.njProjectServer.exception.ResourceNotFoundException;
 import com.njProjectServer.exception.SqlConstraintException;
@@ -10,6 +11,8 @@ import com.njProjectServer.model.dto.LoginUserDto;
 import com.njProjectServer.repository.EmployeeRepository;
 import com.njProjectServer.repository.ProfilesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -17,9 +20,13 @@ import javax.websocket.Session;
 import java.sql.SQLClientInfoException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 
 @Service
 public class ProfilesService {
+
+    @Autowired
+    private EmailConfiguration emailConfiguration;
 
     @Autowired
     private ProfilesRepository profilesRepository;
@@ -43,6 +50,29 @@ public class ProfilesService {
             throw new ResourceNotFoundException("Employee with given id not found");
 
         UserProfile up = new UserProfile(profile.getUsername(), profile.getPassword(), profile.getEmail(), emp.get());
+
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost(this.emailConfiguration.getHost());
+        mailSender.setPort(this.emailConfiguration.getPort());
+        mailSender.setUsername(this.emailConfiguration.getUsername());
+        mailSender.setPassword(this.emailConfiguration.getPassword());
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom(this.emailConfiguration.getUsername());
+        mailMessage.setTo(profile.getEmail());
+        mailMessage.setSubject("Confirmation email");
+        mailMessage.setText("Please confirm that you sign up to our site: " +
+                "Click to link: ");
+
+
+        mailSender.send(mailMessage);
+
         try {
             return profilesRepository.save(up);
         }
