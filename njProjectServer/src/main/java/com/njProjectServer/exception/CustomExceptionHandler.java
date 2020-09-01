@@ -66,6 +66,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(error);
     }
 
+    @ExceptionHandler(SqlConstraintException.class)
+    public final ResponseEntity<Object> handleSQLConstraintExceptions(Exception ex, WebRequest request) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST,"SQL constraint exception", details);
+        return buildResponseEntity(error);
+    }
+
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
         List<String> details = new ArrayList<>();

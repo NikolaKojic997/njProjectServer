@@ -1,6 +1,7 @@
 package com.njProjectServer.repository;
 
 import com.njProjectServer.model.Employee;
+import com.njProjectServer.model.UserProfile;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,5 +16,5 @@ import java.util.Optional;
 
 @Transactional
 public interface EmployeeRepository extends EmployeeBaseRepository<Employee> {
-
+    Optional<Employee> findByIdentificationNumber(String identificationNumber);
 }

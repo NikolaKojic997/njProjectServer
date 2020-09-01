@@ -2,6 +2,7 @@ package com.njProjectServer.service;
 
 import com.njProjectServer.exception.LoginException;
 import com.njProjectServer.exception.ResourceNotFoundException;
+import com.njProjectServer.exception.SqlConstraintException;
 import com.njProjectServer.model.Employee;
 import com.njProjectServer.model.UserProfile;
 import com.njProjectServer.model.dto.InsertProfileDto;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.websocket.Session;
+import java.sql.SQLClientInfoException;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,32 +37,37 @@ public class ProfilesService {
     }
 
     public UserProfile insert(InsertProfileDto profile) {
-        Optional<Employee> emp = employeeRepository.findById(profile.getEmployeeID());
+        Optional<Employee> emp = employeeRepository.findByIdentificationNumber(profile.getIdentificationNumber());
 
         if (emp.isEmpty())
-            new ResourceNotFoundException("Employee with given id not found");
+            throw new ResourceNotFoundException("Employee with given id not found");
 
         UserProfile up = new UserProfile(profile.getUsername(), profile.getPassword(), profile.getEmail(), emp.get());
-        return profilesRepository.save(up);
+        try {
+            return profilesRepository.save(up);
+        }
+        catch (Exception e){
+            throw new SqlConstraintException("Profile with given username already exists!");
+        }
     }
 
 
     public void delete(int id) {
         Optional<UserProfile> profile = profilesRepository.findById(id);
         if (profile.isEmpty())
-            new ResourceNotFoundException("Profile with given id not found");
+            throw new ResourceNotFoundException("Profile with given id not found");
         profilesRepository.deleteById(id);
     }
 
     public UserProfile update(InsertProfileDto profile, int id) {
         Optional<UserProfile> p = profilesRepository.findById(id);
         if (p.isEmpty())
-            new ResourceNotFoundException("Profile with given id not found");
+            throw new ResourceNotFoundException("Profile with given id not found");
 
-        Optional<Employee> emp = employeeRepository.findById(profile.getEmployeeID());
+        Optional<Employee> emp = employeeRepository.findByIdentificationNumber(profile.getIdentificationNumber());
 
         if (emp.isEmpty())
-            new ResourceNotFoundException("Employee with given id not found");
+            throw new ResourceNotFoundException("Employee with given id not found");
 
         p.get().setEmail(profile.getEmail());
         p.get().setPassword(profile.getPassword());
@@ -79,7 +86,12 @@ public class ProfilesService {
             throw new LoginException("Wrong password, try again!");
         }
 
-        return  profile.get();
+        try {
+            return  profile.get();
+        }
+        catch (Exception e){
+            throw new SqlConstraintException("Profile with given username already exists!");
+        }
 
     }
 
