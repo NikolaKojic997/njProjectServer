@@ -14,6 +14,29 @@ public class EmailConfiguration {
     @Value("${spring.mail.password}")
     private String password;
 
+    @Value("${spring.mail.properties.mail.smtp.auth}")
+    private boolean auth;
+    @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
+    private boolean starttls;
+
+
+
+    public boolean isAuth() {
+        return auth;
+    }
+
+    public void setAuth(boolean auth) {
+        this.auth = auth;
+    }
+
+    public boolean isStarttls() {
+        return starttls;
+    }
+
+    public void setStarttls(boolean starttls) {
+        this.starttls = starttls;
+    }
+
     public String getHost() {
         return host;
     }
