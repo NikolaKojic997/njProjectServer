@@ -1,6 +1,5 @@
 package com.njProjectServer.service;
 
-import com.njProjectServer.config.EmailConfiguration;
 import com.njProjectServer.exception.LoginException;
 import com.njProjectServer.exception.ResourceNotFoundException;
 import com.njProjectServer.exception.SqlConstraintException;
@@ -11,17 +10,13 @@ import com.njProjectServer.model.dto.LoginUserDto;
 import com.njProjectServer.repository.EmployeeRepository;
 import com.njProjectServer.repository.ProfilesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import javax.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.websocket.Session;
-import java.sql.SQLClientInfoException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
+
 
 @Service
 public class ProfilesService {
@@ -52,18 +47,27 @@ public class ProfilesService {
 
         UserProfile up = new UserProfile(profile.getUsername(), profile.getPassword(), profile.getEmail(), emp.get());
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom("planart.test@gmail.com");
-        mailMessage.setTo(profile.getEmail());
-        mailMessage.setSubject("Confirmation email");
-        mailMessage.setText("Please confirm that you sign up to our site: " +
-                "Click to link: ");
-
-
-        mailSender.send(mailMessage);
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
         try {
-            return profilesRepository.save(up);
+
+        UserProfile p =  profilesRepository.save(up);
+
+            String htmlMsg = "<p>Hi "+profile.getUsername()+" </p>" +
+                    "<br> <p> Please confirm that you want to activate your account. " +
+                    "To activate your account, you need to click " +
+                    "the link below</p> <br> http://localhost:3000/confirmation/"+p.getProfileID();
+
+
+        helper.setText(htmlMsg, true); // Use this or above line.
+        helper.setTo(profile.getEmail());
+        helper.setSubject("Confirmation email");
+        helper.setFrom("planart.test@gmail.com");
+        mailSender.send(mimeMessage);
+
+        return p;
+
         }
         catch (Exception e){
             throw new SqlConstraintException("Profile with given username already exists!");
@@ -91,8 +95,15 @@ public class ProfilesService {
         p.get().setEmail(profile.getEmail());
         p.get().setPassword(profile.getPassword());
         p.get().setEmployee(emp.get());
+        p.get().setUsername(profile.getUsername());
 
-        return profilesRepository.save(p.get());
+
+        try {
+            return profilesRepository.save(p.get());
+        }
+        catch (Exception e){
+            throw new SqlConstraintException("Profile with given username already exists!");
+        }
 
     }
 
@@ -105,14 +116,20 @@ public class ProfilesService {
             throw new LoginException("Wrong password, try again!");
         }
 
-        try {
-            return  profile.get();
+        if (profile.get().getStatus() == 0){
+            throw new LoginException("Please activate your account!");
         }
-        catch (Exception e){
-            throw new SqlConstraintException("Profile with given username already exists!");
-        }
+
+        return  profile.get();
+
 
     }
-
-
+    public UserProfile activate(int id) {
+        Optional <UserProfile> profile =  profilesRepository.findById(id);
+        if (profile.isEmpty())
+            throw  new LoginException("Profile with given id doesent exist");
+        UserProfile up = profile.get();
+        up.setStatus(1);
+        return profilesRepository.save(up);
+    }
 }

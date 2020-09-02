@@ -53,5 +53,9 @@ public class UserProfileController {
         return profilesService.login(user);
     }
 
+    @PostMapping("/activate/{id}")
+    public UserProfile activate(@PathVariable int id){
+        return profilesService.activate(id);
+    }
 
 }

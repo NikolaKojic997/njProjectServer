@@ -80,6 +80,7 @@ public class EmployeeController {
     @PutMapping("/assistants/{id}")
     public Assistant update(@PathVariable int id,@Valid@RequestBody InsertAssistantDto assistant){
         return service.updateAssistant(id,assistant);
-    }
 
+
+}
 }

@@ -14,10 +14,28 @@ public class UserProfile {
     private String username;
     private String password;
     private String email;
+    //0 for inactive and 1 for active
+    private int status;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employeeId", nullable = false)
     @JsonIgnoreProperties("profiles")
     private Employee employee;
+
+    public int getProfileID() {
+        return profileID;
+    }
+
+    public void setProfileID(int profileID) {
+        this.profileID = profileID;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public int getProfileId() {
         return profileID;
