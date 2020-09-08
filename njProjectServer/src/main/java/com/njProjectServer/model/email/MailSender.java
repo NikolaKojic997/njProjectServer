@@ -9,7 +9,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 public class MailSender {
-
     @Autowired
     private EmailConfiguration emailConfiguration;
 

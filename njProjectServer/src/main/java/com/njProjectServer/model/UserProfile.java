@@ -10,7 +10,7 @@ public class UserProfile {
     @Id @GeneratedValue
     private int profileID;
     @Column(unique = true)
-    @NaturalId
+
     private String username;
     private String password;
     private String email;

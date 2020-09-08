@@ -19,8 +19,6 @@ public class EmailConfiguration {
     @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
     private boolean starttls;
 
-
-
     public boolean isAuth() {
         return auth;
     }

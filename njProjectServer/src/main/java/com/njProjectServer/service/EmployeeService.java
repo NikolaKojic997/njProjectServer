@@ -1,11 +1,13 @@
 package com.njProjectServer.service;
 
 import com.njProjectServer.exception.ResourceNotFoundException;
+import com.njProjectServer.exception.SqlConstraintException;
 import com.njProjectServer.model.*;
 import com.njProjectServer.model.dto.InsertAssistantDto;
 import com.njProjectServer.model.dto.InsertEmployeeDto;
 import com.njProjectServer.model.dto.InsertTeacherDto;
 import com.njProjectServer.repository.*;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,9 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private ProfilesRepository profilesRepository;
 
     @Autowired
     private TeacherRepository teachersRepository;
@@ -46,7 +51,12 @@ public class EmployeeService {
 
     public Employee insert(InsertEmployeeDto employee) {
         Employee emp = new Employee(employee.getName(), employee.getSurname(), employee.getEmploymentDate(), employee.getIdentificationNumber());
-        return employeeRepository.save(emp);
+        try {
+            return employeeRepository.save(emp);
+        }
+        catch (Exception e){
+            throw new SqlConstraintException("Employee with given identification number alredy exists.");
+        }
     }
 
     public Teacher insertTeacher(InsertTeacherDto teacher) {
@@ -61,7 +71,12 @@ public class EmployeeService {
             throw new ResourceNotFoundException("Title with given id not found!");
 
         Teacher tech = new Teacher(teacher.getName(), teacher.getSurname(), teacher.getEmploymentDate(), t.get(), r.get(), teacher.getIdentificationNumber());
-        return teachersRepository.save(tech);
+        try {
+            return teachersRepository.save(tech);
+        }
+        catch (Exception e){
+            throw new SqlConstraintException("Teacher with given identification number alredy exists.");
+        }
     }
 
     public Assistant insertAssistant(InsertAssistantDto assistant) {
@@ -72,13 +87,25 @@ public class EmployeeService {
 
         Assistant a = new Assistant(assistant.getName(), assistant.getSurname(), assistant.getEmploymentDate(), t.get(), assistant.getIdentificationNumber());
 
-        return assistantRepository.save(a);
+        try {
+            return assistantRepository.save(a);
+        }
+        catch (Exception e){
+            throw new SqlConstraintException("Assistant with given identification number alredy exists.");
+        }
     }
 
     public void delete(int id){
         Optional<Employee> e = employeeRepository.findById(id);
+
         if(e.isEmpty())
             throw new ResourceNotFoundException("Employee with given id not found");
+
+        List<UserProfile> profiles = e.get().getProfiles();
+        for (UserProfile p: profiles) {
+            profilesRepository.deleteById(p.getProfileID());
+        }
+
         employeeRepository.deleteById(id);
     }
 
@@ -93,7 +120,12 @@ public class EmployeeService {
         emp.get().setSurname(employee.getSurname());
         emp.get().setIdentificationNumber(employee.getIdentificationNumber());
 
-        return employeeRepository.save(emp.get());
+        try {
+            return employeeRepository.save(emp.get());
+        }
+        catch (Exception e){
+            throw new SqlConstraintException("Employee with given identification number alredy exists.");
+        }
     }
 
     public Assistant updateAssistant(int id, InsertAssistantDto assistant) {
@@ -113,7 +145,12 @@ public class EmployeeService {
 
         a.get().setTitle(title.get());
 
-        return assistantRepository.save(a.get());
+        try {
+            return assistantRepository.save(a.get());
+        }
+        catch (Exception e){
+            throw new SqlConstraintException("Assistant with given identification number alredy exists.");
+        }
     }
 
     public Teacher updateTeacher(int id,InsertTeacherDto teacher) {
@@ -140,7 +177,12 @@ public class EmployeeService {
 
         t.get().setRank(rank.get());
 
-        return teachersRepository.save(t.get());
+        try {
+            return teachersRepository.save(t.get());
+        }
+        catch (Exception e ){
+            throw new SqlConstraintException("Teacher with given identification number alredy exists.");
+        }
     }
 
     public ResponseEntity<Employee> findById(int id) {

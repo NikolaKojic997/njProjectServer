@@ -42,8 +42,8 @@ public class ProfilesService {
     public UserProfile insert(InsertProfileDto profile) {
         Optional<Employee> emp = employeeRepository.findByIdentificationNumber(profile.getIdentificationNumber());
 
-        if (emp.isEmpty())
-            throw new ResourceNotFoundException("Employee with given id not found");
+        if(emp.isEmpty())
+            throw new ResourceNotFoundException("Employee with given identification number doesent exist");
 
         UserProfile up = new UserProfile(profile.getUsername(), profile.getPassword(), profile.getEmail(), emp.get());
 
@@ -87,16 +87,10 @@ public class ProfilesService {
         if (p.isEmpty())
             throw new ResourceNotFoundException("Profile with given id not found");
 
-        Optional<Employee> emp = employeeRepository.findByIdentificationNumber(profile.getIdentificationNumber());
-
-        if (emp.isEmpty())
-            throw new ResourceNotFoundException("Employee with given id not found");
 
         p.get().setEmail(profile.getEmail());
         p.get().setPassword(profile.getPassword());
-        p.get().setEmployee(emp.get());
         p.get().setUsername(profile.getUsername());
-
 
         try {
             return profilesRepository.save(p.get());

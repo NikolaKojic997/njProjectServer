@@ -1,6 +1,5 @@
 package com.njProjectServer.controller;
 
-import com.njProjectServer.exception.ResourceNotFoundException;
 import com.njProjectServer.model.Assistant;
 import com.njProjectServer.model.Employee;
 import com.njProjectServer.model.Teacher;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+
 
 @CrossOrigin
 @RestController
